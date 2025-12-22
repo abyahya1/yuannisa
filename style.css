@@ -332,3 +332,29 @@ body.dark-mode .line-separator {
 body.dark-mode strong {
     color: #fff !important;
 }
+
+/* --- MOBILE TOUCH SPARKLE (ELEGANT) --- */
+.touch-sparkle {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background: var(--accent-gold); /* Warna Emas */
+    border-radius: 50%;
+    pointer-events: none; /* Tembus klik */
+    z-index: 9999;
+    transform: translate(-50%, -50%) scale(1);
+    animation: sparkleFade 0.8s ease-out forwards;
+    box-shadow: 0 0 10px var(--accent-gold); /* Glow effect */
+}
+
+/* Animasi membesar lalu hilang */
+@keyframes sparkleFade {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+/* Saat Night Mode, partikel jadi lebih terang/putih biar kontras */
+body.dark-mode .touch-sparkle {
+    background: #fff;
+    box-shadow: 0 0 10px #fff;
+}

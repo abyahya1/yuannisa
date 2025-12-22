@@ -24,7 +24,7 @@ function bukaHadiah() {
 }
 
 // 2. TYPING
-const teks = "Selamat Ulang Tahun ke-18.";
+const teks = "Selamat Ulang Tahun ke-18 Sayangg.";
 let i = 0; let isTyping = false;
 function ngetik() {
     if (!isTyping) { isTyping = true; return; }
@@ -72,7 +72,7 @@ window.addEventListener('scroll', () => {
 // 4. TOMBOL TAMAN
 document.getElementById('btn-taman').addEventListener('click', function() {
     this.style.borderBottom = "none"; 
-    this.innerText = "Semoga harimu indah..."; 
+    this.innerText = "Semoga kamuu sukaa sayangg..."; 
     this.style.color = "#999"; 
     this.disabled = true;
     
@@ -149,3 +149,46 @@ function toggleTheme() {
         setNightMode(isDark);
     }
 }
+
+/* --- MOBILE MAGIC TOUCH EFFECT --- */
+let lastSparkleTime = 0;
+
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('touch-sparkle');
+    sparkle.style.left = `${x}px`;
+    sparkle.style.top = `${y}px`;
+    
+    // Variasi ukuran acak biar natural
+    const size = Math.random() * 10 + 5; 
+    sparkle.style.width = `${size}px`;
+    sparkle.style.height = `${size}px`;
+
+    document.body.appendChild(sparkle);
+
+    // Hapus elemen setelah animasi selesai (800ms)
+    setTimeout(() => {
+        sparkle.remove();
+    }, 800);
+}
+
+// Event Listener untuk Layar Sentuh
+window.addEventListener('touchmove', (e) => {
+    // Batasi agar tidak terlalu banyak partikel (setiap 50ms)
+    const now = Date.now();
+    if (now - lastSparkleTime > 50) {
+        // Ambil posisi jari pertama
+        const touch = e.touches[0];
+        createSparkle(touch.clientX, touch.clientY);
+        lastSparkleTime = now;
+    }
+}, { passive: true });
+
+// Efek saat diketuk (Tap)
+window.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    createSparkle(touch.clientX, touch.clientY);
+    // Bikin 2 partikel tambahan biar efek 'burst' kecil
+    setTimeout(() => createSparkle(touch.clientX + 10, touch.clientY + 10), 50);
+    setTimeout(() => createSparkle(touch.clientX - 10, touch.clientY - 10), 100);
+}, { passive: true });
