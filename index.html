@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuannisa Syahrani</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+
+    <div id="overlay">
+        <div class="ornament top-left"><svg viewBox="0 0 512 512"><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c12.8-6.4 12.8-24.6 0-31z" fill="currentColor"/></svg></div>
+        <div class="ornament top-right"><svg viewBox="0 0 512 512"><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c12.8-6.4 12.8-24.6 0-31z" fill="currentColor"/></svg></div>
+        <div class="ornament bottom-left"><svg viewBox="0 0 512 512"><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c12.8-6.4 12.8-24.6 0-31z" fill="currentColor"/></svg></div>
+        <div class="ornament bottom-right"><svg viewBox="0 0 512 512"><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c12.8-6.4 12.8-24.6 0-31z" fill="currentColor"/></svg></div>
+
+        <div class="overlay-content">
+            <h2 class="serif-font fade-up">Untuk Yuannisa<br>Syahrani.</h2>
+            <div class="swipe-indicator">
+                <button class="btn-circle" onclick="bukaHadiah()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </button>
+                <p>Buka Surat</p>
+            </div>
+        </div>
+    </div>
+
+    <audio id="musik" loop>
+        <source src="musik.mp3" type="audio/mpeg">
+    </audio>
+
+    <main>
+        <section class="hero">
+            <canvas id="hero-critters"></canvas>
+
+            <div class="hero-text">
+                <h1 id="typing-area" class="serif-font"></h1> 
+                <div class="line-separator"></div>
+                <p class="sub-hero">Panjangg umur dan sehat selalu yaa sayanggkuuuu, Hadiah kecil ini aku buat khusus untuk kamuuu</p>
+            </div>
+        </section>
+
+        <div class="big-image-container">
+            <img src="img/bg1.jpg" alt="Background 1" class="img-sharp">
+            <div class="img-overlay">
+                <span class="serif-font float-text">Fase Baru</span>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="text-intro reveal">
+                <h2 class="serif-font">Tentang Tumbuh.</h2>
+                <p>
+                    Hari ini km hampir masuk ke fase hidup yang ngga lagi remaja labil. 
+                    Kamu akan bertemu banyak hal baru, keputusan berat, dan kenyataan pahit. 
+                    Aku ngga akan bilang ini mudah, tapi satu hal yang aku yakini: 
+                    <strong>Kamu cukup kuat untuk menjalaninya.</strong>
+                </p>
+            </div>
+
+            <div class="netflix-scroll reveal">
+    <div class="card glass">
+        <img src="img/foto1.jpg" alt="Foto 1"> 
+        <div class="card-caption"><h3>Sempurna</h3></div>
+    </div>
+    
+    <div class="card glass">
+        <img src="img/foto2.jpg" alt="Foto 2">
+        <div class="card-caption"><h3>Jujur</h3></div>
+    </div>
+    
+    <div class="card glass">
+        <img src="img/foto3.jpg" alt="Foto 3">
+        <div class="card-caption"><h3>Kuat</h3></div>
+    </div>
+    
+    <div class="card glass">
+        <img src="img/foto4.jpg" alt="Foto 4">
+        <div class="card-caption"><h3>Bangkit</h3></div>
+    </div>
+    
+    <div class="card glass">
+        <img src="img/foto5.jpg" alt="Foto 5">
+        <div class="card-caption"><h3>Dewasa</h3></div>
+    </div>
+</div>
+        </div>
+
+        <div class="big-image-container">
+            <img src="img/bg2.jpg" alt="Background 2" class="img-sharp">
+            <div class="img-overlay">
+                <span class="serif-font float-text">Aku Ada.</span>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="text-intro reveal">
+                <h2 class="serif-font">Janjiku.</h2>
+                <p>
+                    Aku mencintaimu bukan karena kamu selalu kuat, tapi karena kamu mau berproses. 
+                    Mungkin aku ngga bisa menjanjikan masa depan yang mulus, tapi aku janji: 
+                    selama aku di sini, <strong>kamu tidak sendirian</strong> menghadapi dunia ini.
+                </p>
+            </div>
+
+            <div class="netflix-scroll reveal">
+                <div class="card glass"><img src="img/foto6.jpg" alt="Foto"><div class="card-caption"><h3>Berproses</h3></div></div>
+                <div class="card glass"><img src="img/foto7.jpg" alt="Foto"><div class="card-caption"><h3>Bersama</h3></div></div>
+                <div class="card glass"><img src="img/foto8.jpg" alt="Foto"><div class="card-caption"><h3>Kuat</h3></div></div>
+                <div class="card glass"><img src="img/foto9.jpg" alt="Foto"><div class="card-caption"><h3>Bahagia</h3></div></div>
+                <div class="card glass"><img src="img/foto10.jpg" alt="Foto"><div class="card-caption"><h3>Selamanya</h3></div></div>
+            </div>
+        </div>
+
+        <section class="final-area reveal">
+            <div style="max-width: 600px; margin: 0 auto; line-height: 1.8;">
+                <p style="font-style: italic; color: #555; margin-bottom: 20px;">
+                    "Teruslah menjadi diri kamu sendiri ya sayangku, bukan versi yang menyenangkan semua orang, 
+                    tapi versi yang kamu hormati sendiri."
+                </p>
+                <h3 class="serif-font" style="margin-bottom: 30px;">I Love You, Yuannisa Syahrani ♥️</h3>
+            </div>
+            
+            <button id="btn-taman" class="btn-minimal">Taman sederhana dari aku buat kamu 🌻</button>
+        </section>
+
+        <footer>
+            <p>Bertumbuhlah dengan berani, Cantikku.</p>
+            <br>
+            <button onclick="rewrapGift()" class="btn-rewrap">Baca Ulang ↺</button>
+        </footer>
+    </main>
+
+    <canvas id="flower-canvas"></canvas>
+    <div class="music-control" onclick="toggleMusik()">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="garden.js"></script>
+    <script src="critters.js"></script>
+</body>
+</body>
+</html>
