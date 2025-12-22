@@ -263,64 +263,92 @@ function switchPage(pageName) {
 
 /* --- REELS VIDEO LOGIC --- */
 
-// Fungsi untuk memutar/pause video saat diklik tombol tengahnya
-function toggleVideo(button) {
-    const reelItem = button.closest('.reel-item');
-    const video = reelItem.querySelector('video');
-    
-    if (video.paused) {
-        // Pause video lain dulu sebelum memutar yang ini
-        pauseAllReels();
-        video.play();
-        reelItem.classList.add('playing');
-        button.innerText = ""; // Hilangkan ikon play
-    } else {
-        video.pause();
-        reelItem.classList.remove('playing');
-        button.innerText = "▶"; // Munculkan ikon play
-    }
-    // Unmute video agar bersuara saat di-klik (browser memblokir autoplay bersuara)
-    video.muted = false;
-}
+// 1. Observer untuk Auto-Play saat Scroll
+const reelsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const reelItem = entry.target;
+        const video = reelItem.querySelector('video');
+        const btn = reelItem.querySelector('.video-control-btn');
+        
+        if (entry.isIntersecting) {
+            // Video masuk layar -> PLAY
+            // Kita reset waktu ke 0 biar mulus (opsional)
+            // video.currentTime = 0; 
+            
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Berhasil Play
+                    reelItem.classList.add('playing');
+                }).catch(error => {
+                    console.log("Autoplay dicegah browser:", error);
+                    // Jika gagal, munculkan tombol play manual (opsional)
+                });
+            }
+        } else {
+            // Video keluar layar -> PAUSE & MUTE kembali
+            video.pause();
+            reelItem.classList.remove('playing');
+            // Opsional: Matikan suara lagi saat di-scroll lewat (biar pas balik ga kaget)
+            video.muted = true;
+            if(btn) {
+                btn.innerText = "🔇";
+                btn.classList.add('muted');
+            }
+        }
+    });
+}, { 
+    threshold: 0.5 // Play saat 50% video terlihat (lebih responsif)
+});
 
+// 2. Pasang Logic ke Setiap Item
+document.querySelectorAll('.reel-item').forEach(item => {
+    reelsObserver.observe(item);
+    
+    const video = item.querySelector('video');
+    const btn = item.querySelector('.video-control-btn');
+
+    // FUNGSI UTAMA: Togle Suara & Play
+    const toggleSound = () => {
+        if (video.muted) {
+            // NYALAKAN SUARA
+            video.muted = false;
+            btn.innerText = "🔊";
+            btn.classList.remove('muted');
+            
+            // Matikan musik background website
+            const bgMusic = document.getElementById('musik');
+            if(!bgMusic.paused) toggleMusik();
+            
+        } else {
+            // MATIKAN SUARA
+            video.muted = true;
+            btn.innerText = "🔇";
+            btn.classList.add('muted');
+        }
+    };
+
+    // Klik Tombol Mute
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Biar ga bentrok sama klik container
+        toggleSound();
+    });
+
+    // Klik Layar Video (Cadangan) -> Juga bisa buat Play/Pause manual
+    item.addEventListener('click', () => {
+        if(video.paused) {
+            video.play();
+            toggleSound(); // Sekalian nyalain suara kalau di-tap
+        } else {
+            toggleSound(); // Kalau lagi play, tap buat nyalain/matiin suara
+        }
+    });
+});
+
+// 3. Helper: Pause Semua (Dipanggil saat pindah halaman)
 function pauseAllReels() {
     document.querySelectorAll('.reel-item video').forEach(vid => {
         vid.pause();
-        vid.closest('.reel-item').classList.remove('playing');
-        vid.nextElementSibling.nextElementSibling.innerText = "▶"; // Reset tombol play
+        vid.muted = true; // Reset jadi bisu
     });
 }
-
-// (Opsional) Coba putar video pertama saat masuk halaman reels
-function playFirstReel() {
-     const firstVideo = document.querySelector('.reel-item video');
-     if(firstVideo) {
-         // Kita coba play muted dulu agar autoplay jalan
-         firstVideo.muted = true; 
-         firstVideo.play().then(() => {
-             firstVideo.closest('.reel-item').classList.add('playing');
-              firstVideo.nextElementSibling.nextElementSibling.innerText = "";
-         }).catch(e => console.log("Autoplay reels diblokir browser, perlu interaksi user."));
-     }
-}
-
-// Deteksi scroll di container reels untuk pause video yang keluar layar (Advanced)
-// Untuk saat ini kita pakai klik manual dulu agar lebih stabil di berbagai HP.
-
-/* --- FIX AUDIO BACKGROUND (Anti Ghost Sound) --- */
-document.addEventListener('visibilitychange', function() {
-    const audio = document.getElementById('musik');
-    const musicControl = document.querySelector('.music-control');
-    
-    // Jika pengguna keluar dari tab/minimize browser
-    if (document.hidden) {
-        if (!audio.paused) {
-            audio.pause();
-            musicControl.classList.add('paused');
-        }
-    } 
-    // Opsional: Jika ingin nyala lagi otomatis saat balik, hapus komentar di bawah
-    // else {
-    //     if (audio.paused && !isGardenActive) { audio.play(); musicControl.classList.remove('paused'); }
-    // }
-});

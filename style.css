@@ -433,47 +433,97 @@ body.dark-mode .bottom-navbar {
 }
 
 
-/* --- STYLE HALAMAN REELS --- */
+/* Container Halaman Utama Reels */
 #reels-page {
-    background: #000; /* Reels background gelap */
-    height: 100vh;
+    background: #000; 
+    /* Gunakan dvh (Dynamic Viewport Height) agar pas di HP */
+    height: 100dvh; 
+    width: 100%;
+    position: relative;
     overflow: hidden;
+    
+    /* PENTING: Matikan padding bawaan page-section agar video mentok bawah */
+    padding-bottom: 0 !important; 
+    padding-top: 0 !important;
 }
+
+/* Scroll Container */
 .reels-container {
+    width: 100%;
     height: 100%;
     overflow-y: scroll;
-    scroll-snap-type: y mandatory; /* Efek snap ala TikTok/IG Reels */
-    scrollbar-width: none; /* Sembunyikan scrollbar */
+    /* Kunci agar scroll berhenti pas di setiap video */
+    scroll-snap-type: y mandatory; 
+    scroll-behavior: smooth;
+    
+    /* Sembunyikan Scrollbar */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
 }
 .reels-container::-webkit-scrollbar { display: none; }
 
+/* Item Video Individual */
 .reel-item {
     position: relative;
-    width: 100%; height: 100%; /* Full layar per video */
-    scroll-snap-align: start; /* Titik snap */
-    background: #111;
+    width: 100%; 
+    height: 100%; /* Wajib 100% dari container */
+    
+    /* Titik Snap: Pastikan video selalu berhenti di awal */
+    scroll-snap-align: start; 
+    scroll-snap-stop: always;
+    
+    background: #000;
+    overflow: hidden;
 }
+
+/* Video Object Fit (Agar tidak ada bar hitam) */
 .reel-item video {
-    width: 100%; height: 100%;
-    object-fit: cover; /* Video memenuhi layar */
+    width: 100%;
+    height: 100%;
+    /* COVER: Paksa video memenuhi layar, meskipun terpotong sedikit pinggirnya */
+    object-fit: cover; 
+    display: block;
 }
+
+/* Overlay Teks (Judul & Caption) */
 .reel-overlay {
-    position: absolute; bottom: 80px; left: 20px; z-index: 2;
-    color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    position: absolute; 
+    bottom: 100px; /* Naikkan sedikit agar tidak ketutup Navbar Kapsul */
+    left: 20px; 
+    width: 80%; /* Jangan terlalu lebar */
+    z-index: 10;
+    pointer-events: none; /* Agar klik tembus ke video */
+    
+    /* Bayangan teks agar terbaca di video terang */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
-.reel-overlay h3 { font-size: 1.2rem; margin-bottom: 5px; }
-.reel-overlay p { font-size: 0.9rem; opacity: 0.9; }
+.reel-overlay h3 { 
+    font-size: 1.4rem; 
+    margin-bottom: 8px; 
+    color: #fff;
+    font-weight: 700;
+}
+.reel-overlay p { 
+    font-size: 1rem; 
+    color: rgba(255,255,255,0.9); 
+    line-height: 1.4;
+}
 
-/* Tombol Play Tengah (Manual) */
+/* Gradasi Hitam di Bawah (Agar teks & navbar lebih jelas) */
+.reel-item::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 30%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Tombol Mute di Tengah */
 .video-control-btn {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.5); color: #fff; border: none;
-    width: 60px; height: 60px; border-radius: 50%; font-size: 24px; cursor: pointer;
-    opacity: 0.8; transition: 0.3s; z-index: 5;
-    display: flex; justify-content: center; align-items: center;
+    /* Pastikan z-index lebih tinggi dari overlay gradasi */
+    z-index: 20; 
 }
-.reel-item.playing .video-control-btn { opacity: 0; pointer-events: none; } /* Hilang saat play */
-
 
 /* --- STYLE HALAMAN ALBUM (PHOTOBOOTH WALL) --- */
 #album-page {
