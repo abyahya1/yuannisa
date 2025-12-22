@@ -352,3 +352,29 @@ function pauseAllReels() {
         vid.muted = true; // Reset jadi bisu
     });
 }
+
+document.addEventListener('visibilitychange', function() {
+    // Jika user meninggalkan halaman (Minimize Browser / Pindah Tab / Lock Screen)
+    if (document.hidden) {
+        console.log("User leaving - Killing all sound.");
+
+        // 1. MATIKAN MUSIK BACKGROUND
+        const bgMusic = document.getElementById('musik');
+        const musicControl = document.querySelector('.music-control');
+        
+        if (bgMusic && !bgMusic.paused) {
+            bgMusic.pause();
+            if (musicControl) musicControl.classList.add('paused');
+        }
+
+        // 2. MATIKAN SEMUA VIDEO REELS (PENTING!)
+        const allVideos = document.querySelectorAll('video');
+        allVideos.forEach(vid => {
+            if (!vid.paused) {
+                vid.pause();
+                // Opsional: Reset tombol mute di video tersebut jika perlu
+                // tapi pause saja sudah cukup untuk menghentikan suara.
+            }
+        });
+    }
+});
