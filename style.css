@@ -478,15 +478,54 @@ body.dark-mode .bottom-navbar {
 /* --- STYLE HALAMAN ALBUM (PHOTOBOOTH WALL) --- */
 #album-page {
     padding-top: 60px;
-    /* Latar belakang dinding yang sedikit bertekstur (opsional, warna solid juga oke) */
-    background-color: #f4f4f9; 
-    background-image: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0)), url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='0.03' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     min-height: 100vh;
+    
+    /* 1. Warna Dasar (Warm White / Cream) */
+    background-color: #fcfbf7; 
+    
+    /* 2. Corak Tekstur Dinding (Noise Halus) */
+    background-image: 
+        /* Lapisan 1: Noise Halus */
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='0.05' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+        /* Lapisan 2: Gradasi Halus (Vignette) di pinggir */
+        radial-gradient(circle at center, transparent 0%, rgba(212, 175, 55, 0.05) 100%);
 }
 
-.album-header { text-align: center; margin-bottom: 40px; position: relative; z-index: 2; }
-.album-header h2 { color: #333; }
-.album-header p { color: #666; }
+/* --- JUDUL ALBUM (Agar menyatu dengan dinding) --- */
+.album-header h2 { 
+    color: #4a4a4a; 
+    font-family: var(--font-serif);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.05); /* Efek timbul dikit */
+}
+.album-header p { 
+    color: #888; 
+    font-style: italic;
+    background: #fff;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* --- ADJUSTMENT CONTAINER DINDING --- */
+.photobooth-wall {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 40px; 
+    padding: 20px 20px 150px 20px; 
+    overflow: hidden; 
+}
+
+/* --- ADJUSTMENT DARK MODE (Malam Hari) --- */
+body.dark-mode #album-page {
+    /* Dinding Gelap Elegan (Dark Grey Wall) */
+    background-color: #1a1a20; 
+    background-image: 
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='0.05' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+}
 
 /* Container Dinding */
 .photobooth-wall {

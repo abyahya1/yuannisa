@@ -218,21 +218,36 @@ function switchPage(pageName) {
     
     // Jika pindah KE Reels
     if (pageName === 'reels') {
-        // Matikan taman bunga untuk performa
-        if (typeof clearGarden === "function") clearGarden();
-        // Pause musik background utama agar tidak tabrakan dengan suara video
+        
+        if (typeof resetGardenUI === "function") {
+            resetGardenUI(); 
+        } else {
+            // Backup manual jika fungsi resetGardenUI tidak terbaca
+            if (typeof clearGarden === "function") clearGarden();
+            isGardenActive = false;
+            const btnTaman = document.getElementById('btn-taman');
+            if(btnTaman) {
+                btnTaman.disabled = false;
+                btnTaman.innerText = "Taman sederhana dari aku buat kamu 🌻";
+                btnTaman.style.color = "";
+                btnTaman.style.borderBottom = "1px solid #333";
+            }
+        }
+
+        // Pause musik background utama
         const bgMusic = document.getElementById('musik');
         if(!bgMusic.paused) {
-             toggleMusik(); // Panggil fungsi toggle untuk pause dan update ikon music control
+             toggleMusik(); 
         }
-        // Mulai putar video pertama otomatis (opsional, browser mungkin memblokir)
-        playFirstReel();
+        
+        // Mulai putar video pertama (opsional)
+        if (typeof playFirstReel === "function") playFirstReel();
     } 
     
-    // Jika pindah KE Album atau Home DARI Reels
+    // Jika pindah KE Album atau Home
     else {
-        pauseAllReels(); // Stop semua video reels
-        // Nyalakan kembali musik background jika sebelumnya mati
+        // ... kode sisanya sama ...
+        if (typeof pauseAllReels === "function") pauseAllReels();
         const bgMusic = document.getElementById('musik');
          if(bgMusic.paused) {
              toggleMusik();
@@ -291,3 +306,21 @@ function playFirstReel() {
 
 // Deteksi scroll di container reels untuk pause video yang keluar layar (Advanced)
 // Untuk saat ini kita pakai klik manual dulu agar lebih stabil di berbagai HP.
+
+/* --- FIX AUDIO BACKGROUND (Anti Ghost Sound) --- */
+document.addEventListener('visibilitychange', function() {
+    const audio = document.getElementById('musik');
+    const musicControl = document.querySelector('.music-control');
+    
+    // Jika pengguna keluar dari tab/minimize browser
+    if (document.hidden) {
+        if (!audio.paused) {
+            audio.pause();
+            musicControl.classList.add('paused');
+        }
+    } 
+    // Opsional: Jika ingin nyala lagi otomatis saat balik, hapus komentar di bawah
+    // else {
+    //     if (audio.paused && !isGardenActive) { audio.play(); musicControl.classList.remove('paused'); }
+    // }
+});
