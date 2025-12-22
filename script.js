@@ -192,3 +192,102 @@ window.addEventListener('touchstart', (e) => {
     setTimeout(() => createSparkle(touch.clientX + 10, touch.clientY + 10), 50);
     setTimeout(() => createSparkle(touch.clientX - 10, touch.clientY - 10), 100);
 }, { passive: true });
+
+/* --- NAVIGATION & PAGE SWITCHING LOGIC --- */
+
+const pages = {
+    home: document.getElementById('home-page'),
+    reels: document.getElementById('reels-page'),
+    album: document.getElementById('album-page')
+};
+const navItems = document.querySelectorAll('.nav-item');
+
+function switchPage(pageName) {
+    // 1. Hapus class 'active' dari semua halaman dan tombol nav
+    Object.values(pages).forEach(page => page.classList.remove('active'));
+    navItems.forEach(item => item.classList.remove('active'));
+
+    // 2. Tambahkan class 'active' ke halaman yang dipilih
+    pages[pageName].classList.add('active');
+
+    // 3. Tambahkan class 'active' ke tombol nav yang sesuai (cari berdasarkan onclick attribute)
+    const activeNavBtn = Array.from(navItems).find(item => item.getAttribute('onclick').includes(pageName));
+    if(activeNavBtn) activeNavBtn.classList.add('active');
+
+    // --- LOGIKA KHUSUS PER HALAMAN ---
+    
+    // Jika pindah KE Reels
+    if (pageName === 'reels') {
+        // Matikan taman bunga untuk performa
+        if (typeof clearGarden === "function") clearGarden();
+        // Pause musik background utama agar tidak tabrakan dengan suara video
+        const bgMusic = document.getElementById('musik');
+        if(!bgMusic.paused) {
+             toggleMusik(); // Panggil fungsi toggle untuk pause dan update ikon music control
+        }
+        // Mulai putar video pertama otomatis (opsional, browser mungkin memblokir)
+        playFirstReel();
+    } 
+    
+    // Jika pindah KE Album atau Home DARI Reels
+    else {
+        pauseAllReels(); // Stop semua video reels
+        // Nyalakan kembali musik background jika sebelumnya mati
+        const bgMusic = document.getElementById('musik');
+         if(bgMusic.paused) {
+             toggleMusik();
+        }
+    }
+
+    // Jika pindah KE Home, pastikan scroll reveal dicek ulang
+    if (pageName === 'home') {
+        window.dispatchEvent(new Event('scroll'));
+    }
+}
+
+
+/* --- REELS VIDEO LOGIC --- */
+
+// Fungsi untuk memutar/pause video saat diklik tombol tengahnya
+function toggleVideo(button) {
+    const reelItem = button.closest('.reel-item');
+    const video = reelItem.querySelector('video');
+    
+    if (video.paused) {
+        // Pause video lain dulu sebelum memutar yang ini
+        pauseAllReels();
+        video.play();
+        reelItem.classList.add('playing');
+        button.innerText = ""; // Hilangkan ikon play
+    } else {
+        video.pause();
+        reelItem.classList.remove('playing');
+        button.innerText = "▶"; // Munculkan ikon play
+    }
+    // Unmute video agar bersuara saat di-klik (browser memblokir autoplay bersuara)
+    video.muted = false;
+}
+
+function pauseAllReels() {
+    document.querySelectorAll('.reel-item video').forEach(vid => {
+        vid.pause();
+        vid.closest('.reel-item').classList.remove('playing');
+        vid.nextElementSibling.nextElementSibling.innerText = "▶"; // Reset tombol play
+    });
+}
+
+// (Opsional) Coba putar video pertama saat masuk halaman reels
+function playFirstReel() {
+     const firstVideo = document.querySelector('.reel-item video');
+     if(firstVideo) {
+         // Kita coba play muted dulu agar autoplay jalan
+         firstVideo.muted = true; 
+         firstVideo.play().then(() => {
+             firstVideo.closest('.reel-item').classList.add('playing');
+              firstVideo.nextElementSibling.nextElementSibling.innerText = "";
+         }).catch(e => console.log("Autoplay reels diblokir browser, perlu interaksi user."));
+     }
+}
+
+// Deteksi scroll di container reels untuk pause video yang keluar layar (Advanced)
+// Untuk saat ini kita pakai klik manual dulu agar lebih stabil di berbagai HP.

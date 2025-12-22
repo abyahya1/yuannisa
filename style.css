@@ -358,3 +358,229 @@ body.dark-mode .touch-sparkle {
     background: #fff;
     box-shadow: 0 0 10px #fff;
 }
+
+/* --- PAGE SWITCHING LOGIC --- */
+/* Sembunyikan semua halaman secara default */
+.page-section {
+    display: none;
+    /* Tambah padding bawah agar konten tidak ketabrak navbar yang melayang */
+    padding-bottom: 120px; 
+    min-height: 100vh;
+    animation: fadeInPage 0.5s ease;
+}
+/* Tampilkan hanya yang ada class 'active' */
+.page-section.active {
+    display: block;
+}
+@keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* --- LIQUID GLASS NAVBAR (APPLE STYLE) --- */
+.bottom-navbar {
+    position: fixed; 
+    bottom: 20px; /* Jarak dari lantai (biar melayang) */
+    left: 50%;
+    transform: translateX(-50%); /* Trik menengahkan elemen fixed */
+    
+    width: 90%; /* Tidak full layar, tapi 90% lebar HP */
+    max-width: 400px; /* Batasi lebar di layar laptop biar ga kepanjangan */
+    height: 65px; 
+    
+    display: flex; justify-content: space-evenly; align-items: center;
+    z-index: 9990; 
+    
+    /* BENTUK ROUND (KAPSUL) */
+    border-radius: 50px; /* Lengkungan penuh */
+    
+    /* EFEK KACA LIQUID */
+    background: rgba(255, 255, 255, 0.75); 
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    
+    /* Border & Shadow Halus */
+    border: 1px solid rgba(255, 255, 255, 0.5); 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Bayangan lebih soft */
+    
+    transition: all 0.3s ease;
+}
+
+/* Night Mode Navbar */
+body.dark-mode .bottom-navbar {
+    background: rgba(30, 30, 40, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+/* Item Navigasi (Sedikit penyesuaian agar pas di kapsul) */
+.nav-item {
+    background: none; border: none;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #999; 
+    cursor: pointer; transition: 0.3s;
+    height: 100%;
+    flex: 1;
+    border-radius: 50px; /* Biar efek kliknya juga round */
+}
+
+/* Efek saat ditekan (Active) */
+.nav-item.active {
+    color: var(--accent-gold);
+}
+.nav-item.active svg {
+    transform: translateY(-3px);
+    stroke: var(--accent-gold);
+    fill: rgba(212, 175, 55, 0.15);
+}
+
+
+/* --- STYLE HALAMAN REELS --- */
+#reels-page {
+    background: #000; /* Reels background gelap */
+    height: 100vh;
+    overflow: hidden;
+}
+.reels-container {
+    height: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory; /* Efek snap ala TikTok/IG Reels */
+    scrollbar-width: none; /* Sembunyikan scrollbar */
+}
+.reels-container::-webkit-scrollbar { display: none; }
+
+.reel-item {
+    position: relative;
+    width: 100%; height: 100%; /* Full layar per video */
+    scroll-snap-align: start; /* Titik snap */
+    background: #111;
+}
+.reel-item video {
+    width: 100%; height: 100%;
+    object-fit: cover; /* Video memenuhi layar */
+}
+.reel-overlay {
+    position: absolute; bottom: 80px; left: 20px; z-index: 2;
+    color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+.reel-overlay h3 { font-size: 1.2rem; margin-bottom: 5px; }
+.reel-overlay p { font-size: 0.9rem; opacity: 0.9; }
+
+/* Tombol Play Tengah (Manual) */
+.video-control-btn {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.5); color: #fff; border: none;
+    width: 60px; height: 60px; border-radius: 50%; font-size: 24px; cursor: pointer;
+    opacity: 0.8; transition: 0.3s; z-index: 5;
+    display: flex; justify-content: center; align-items: center;
+}
+.reel-item.playing .video-control-btn { opacity: 0; pointer-events: none; } /* Hilang saat play */
+
+
+/* --- STYLE HALAMAN ALBUM (PHOTOBOOTH WALL) --- */
+#album-page {
+    padding-top: 60px;
+    /* Latar belakang dinding yang sedikit bertekstur (opsional, warna solid juga oke) */
+    background-color: #f4f4f9; 
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0)), url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='0.03' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    min-height: 100vh;
+}
+
+.album-header { text-align: center; margin-bottom: 40px; position: relative; z-index: 2; }
+.album-header h2 { color: #333; }
+.album-header p { color: #666; }
+
+/* Container Dinding */
+.photobooth-wall {
+    display: flex;
+    flex-wrap: wrap; /* Agar strip turun ke bawah jika layar sempit */
+    justify-content: center; /* Posisi di tengah */
+    gap: 40px; /* Jarak antar strip kertas */
+    padding: 20px 20px 150px 20px; /* Padding bawah besar agar tidak ketutup navbar */
+    overflow: hidden; /* Mencegah scroll horizontal akibat rotasi */
+}
+
+/* --- STYLE KERTAS STRIP --- */
+.photobooth-strip {
+    background: #fff; /* Warna kertas putih */
+    width: 280px; /* Lebar fix seperti strip asli */
+    padding: 15px 15px 20px 15px; /* Jarak putih di sekeliling foto */
+    
+    /* Efek "Menempel di Dinding" */
+    box-shadow: 
+        2px 3px 5px rgba(0,0,0,0.1), /* Bayangan dekat halus */
+        5px 10px 20px rgba(0,0,0,0.08); /* Bayangan jauh untuk kedalaman */
+    transform-origin: center top; /* Titik rotasi di tengah atas (seperti dipaku/diselotip) */
+    transition: transform 0.4s ease;
+}
+
+/* Efek Hover: Kertas sedikit terangkat saat disentuh */
+.photobooth-strip:hover {
+    transform: scale(1.03) rotate(0deg) !important; /* Reset rotasi jadi lurus & zoom dikit */
+    box-shadow: 5px 15px 30px rgba(0,0,0,0.15); /* Bayangan makin dalam */
+    z-index: 10; /* Agar muncul di paling depan */
+}
+
+/* Konten Foto Vertikal */
+.strip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Jarak putih antar foto di dalam strip */
+}
+
+.strip-content img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3; /* Agar foto sedikit persegi panjang (klasik photobooth), bukan kotak sempurna */
+    object-fit: cover;
+    /* Filter Vintage Halus (Opsional) */
+    filter: sepia(15%) contrast(105%) brightness(105%);
+    border: 1px solid #f0f0f0; /* Garis tepi sangat tipis */
+}
+
+/* Footer Strip (Tulisan di bawah) */
+.strip-footer {
+    margin-top: 15px;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace; /* Font ala mesin ketik */
+    font-size: 0.9rem;
+    color: #555;
+    letter-spacing: 1px;
+}
+
+/* --- VARIASI ROTASI ACAK (Agar terlihat alami ditempel) --- */
+/* Style 1: Miring Kiri */
+.photo-style-1 {
+    transform: rotate(-3deg);
+    margin-top: 20px;
+}
+/* Style 2: Miring Kanan */
+.photo-style-2 {
+    transform: rotate(4deg);
+    margin-top: -10px; /* Sedikit naik agar terlihat tumpang tindih */
+}
+/* Style 3: Miring Kiri Lebih Ekstrem */
+.photo-style-3 {
+    transform: rotate(-5deg) scale(0.98); /* Sedikit lebih kecil */
+    margin-top: 30px;
+}
+/* Tambahan: Jika strip berurutan, beri variasi margin agar tidak rata */
+.photobooth-strip:nth-child(even) {
+    margin-top: 40px;
+}
+
+/* --- DARK MODE ADJUSTMENT --- */
+body.dark-mode #album-page {
+    background-color: #1a1a24; /* Dinding gelap */
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.5));
+}
+body.dark-mode .album-header h2 { color: #eee; }
+body.dark-mode .album-header p { color: #aaa; }
+
+body.dark-mode .photobooth-strip {
+    background: #e8e8e8; /* Kertas tidak putih terang, tapi agak abu agar tidak silau */
+    box-shadow: 
+        2px 3px 5px rgba(0,0,0,0.3), 
+        5px 10px 25px rgba(0,0,0,0.2); /* Bayangan lebih pekat */
+}
+body.dark-mode .strip-footer {
+    color: #333;
+}
