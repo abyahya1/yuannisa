@@ -125,3 +125,27 @@ function rewrapGift() {
     },500);
 }
 document.querySelector('.btn-circle').addEventListener('click', ()=>{ isTyping=true; ngetik(); });
+
+// --- LOGIC NIGHT MODE ---
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+
+    const isDark = body.classList.contains('dark-mode');
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+
+    // Ganti Ikon
+    if (isDark) {
+        iconMoon.style.display = 'none';
+        iconSun.style.display = 'block';
+    } else {
+        iconMoon.style.display = 'block';
+        iconSun.style.display = 'none';
+    }
+
+    // Beritahu garden.js untuk nyalakan/matikan Kunang-Kunang
+    if (typeof setNightMode === "function") {
+        setNightMode(isDark);
+    }
+}
