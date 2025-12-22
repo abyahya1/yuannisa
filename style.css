@@ -375,39 +375,43 @@ body.dark-mode .touch-sparkle {
 @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 
-/* --- LIQUID GLASS NAVBAR (APPLE STYLE) --- */
+/* --- LIQUID FLOATING NAVBAR (MORE TRANSPARENT) --- */
 .bottom-navbar {
     position: fixed; 
-    bottom: 20px; /* Jarak dari lantai (biar melayang) */
+    bottom: 20px; 
     left: 50%;
-    transform: translateX(-50%); /* Trik menengahkan elemen fixed */
+    transform: translateX(-50%); 
     
-    width: 90%; /* Tidak full layar, tapi 90% lebar HP */
-    max-width: 400px; /* Batasi lebar di layar laptop biar ga kepanjangan */
+    width: 90%; 
+    max-width: 400px; 
     height: 65px; 
     
     display: flex; justify-content: space-evenly; align-items: center;
     z-index: 9990; 
     
-    /* BENTUK ROUND (KAPSUL) */
-    border-radius: 50px; /* Lengkungan penuh */
+    /* BENTUK ROUND */
+    border-radius: 50px; 
     
-    /* EFEK KACA LIQUID */
-    background: rgba(255, 255, 255, 0.75); 
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* --- BAGIAN INI YANG DIUBAH (LEBIH BENING) --- */
+    /* Angka 0.55 di belakang artinya transparansi 55% (Sebelumnya 0.75) */
+    background: rgba(255, 255, 255, 0.40); 
     
-    /* Border & Shadow Halus */
-    border: 1px solid rgba(255, 255, 255, 0.5); 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Bayangan lebih soft */
+    /* Blur diperkuat sedikit agar efek kaca makin terasa meski transparan */
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    
+    /* Border diperhalus */
+    border: 1px solid rgba(255, 255, 255, 0.4); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
     
     transition: all 0.3s ease;
 }
 
-/* Night Mode Navbar */
+/* Night Mode Navbar (Lebih Transparan Juga) */
 body.dark-mode .bottom-navbar {
-    background: rgba(30, 30, 40, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* Turunkan opacity gelapnya */
+    background: rgba(30, 30, 40, 0.50); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
 
@@ -672,4 +676,22 @@ body.dark-mode .photobooth-strip {
 }
 body.dark-mode .strip-footer {
     color: #333;
+}
+
+/* --- NAVBAR KHUSUS SAAT NONTON REELS --- */
+/* Kita paksa jadi gelap transparan agar menyatu dengan background video */
+.bottom-navbar.reels-mode {
+    background: rgba(20, 20, 20, 0.6) !important; /* Hitam transparan */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important; /* Border tipis samar */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+}
+
+/* Warna Icon di Reels Mode harus terang */
+.bottom-navbar.reels-mode .nav-item {
+    color: #bbb !important; /* Abu terang */
+}
+
+/* Icon Aktif tetap Emas */
+.bottom-navbar.reels-mode .nav-item.active {
+    color: var(--accent-gold) !important;
 }

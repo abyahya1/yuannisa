@@ -17,9 +17,20 @@ document.addEventListener('gardenCleared', () => {
 function bukaHadiah() {
     const overlay = document.getElementById('overlay');
     overlay.classList.add('swiped-up');
+    
     const audio = document.getElementById('musik');
-    audio.volume = 0.6;
-    audio.play().catch(e => console.log("Audio perlu izin"));
+    // Cek dulu biar ga error kalau audio belum siap
+    if (audio) {
+        audio.volume = 0.6;
+        audio.play().catch(e => console.log("Audio perlu interaksi user"));
+    }
+
+    // --- FIX LAYAR PUTIH ---
+    // Paksa browser sadar kalau kita sedang melihat konten
+    setTimeout(() => {
+        window.dispatchEvent(new Event('scroll')); // Pura-pura scroll
+    }, 200); // Jalankan 0.2 detik setelah klik
+
     setTimeout(ngetik, 800);
 }
 
@@ -102,27 +113,56 @@ function toggleMusik() {
     if(a.paused){a.play(); c.classList.remove('paused');} else{a.pause(); c.classList.add('paused');}
 }
 
-// 6. REWRAP (RESET TOTAL)
+// 6. REWRAP (RESET TOTAL - FIX BLANK)
 function rewrapGift() {
-    window.scrollTo({top:0, behavior:'smooth'});
-    setTimeout(()=>{
-        document.getElementById('overlay').classList.remove('swiped-up');
-        const a=document.getElementById('musik'); a.pause(); a.currentTime=0; document.querySelector('.music-control').classList.add('paused');
-        document.getElementById('typing-area').innerHTML=""; i=0; isTyping=false;
-        
-        // Paksa bersih instan jika tombol rewrap ditekan (tidak perlu animasi shrink)
-        if (typeof clearGarden === "function") clearGarden();
-        
-        // Reset manual status tombol
-        isGardenActive = false;
-        const btnTaman = document.getElementById('btn-taman');
-        btnTaman.disabled = false;
-        btnTaman.innerText = "Taman sederhana dari aku buat kamu 🌻"; 
-        btnTaman.style.color = "";
-        btnTaman.style.borderBottom = "1px solid #333";
+    // 1. Pastikan kita kembali ke Tab Home secara sistem
+    // (Tapi tanpa animasi fade in ulang biar ga kedip)
+    if (typeof pages !== 'undefined' && pages.home) {
+         // Manual set active class tanpa panggil switchPage full
+         Object.values(pages).forEach(page => page.classList.remove('active'));
+         pages.home.classList.add('active');
+         
+         // Reset tombol navbar jadi Home
+         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+         document.querySelector('.nav-item[onclick*="home"]').classList.add('active');
+    }
 
-        document.querySelectorAll('.active, .aktif').forEach(el=>{el.classList.remove('active'); el.classList.remove('aktif');});
-    },500);
+    // 2. Scroll ke atas
+    window.scrollTo({top: 0, behavior: 'smooth'});
+
+    // 3. Reset Logika
+    setTimeout(() => {
+        // Tutup Amplop
+        document.getElementById('overlay').classList.remove('swiped-up');
+        
+        // Reset Musik
+        const audio = document.getElementById('musik');
+        audio.pause(); 
+        audio.currentTime = 0; 
+        document.querySelector('.music-control').classList.add('paused');
+        
+        // Reset Teks Ketikan
+        document.getElementById('typing-area').innerHTML = "";
+        i = 0; isTyping = false;
+
+        // Reset Taman (Penting!)
+        if (typeof resetGardenUI === "function") {
+            resetGardenUI();
+        } else if (typeof clearGarden === "function") {
+            clearGarden();
+        }
+        
+        // Hapus status 'active' dari elemen scroll reveal
+        // (Elemen jadi transparan lagi)
+        document.querySelectorAll('.active, .aktif').forEach(el => {
+            // JANGAN hapus class active punya page-section atau navbar
+            if (!el.classList.contains('page-section') && !el.classList.contains('nav-item')) {
+                el.classList.remove('active');
+                el.classList.remove('aktif');
+            }
+        });
+
+    }, 500);
 }
 document.querySelector('.btn-circle').addEventListener('click', ()=>{ isTyping=true; ngetik(); });
 
@@ -203,26 +243,36 @@ const pages = {
 const navItems = document.querySelectorAll('.nav-item');
 
 function switchPage(pageName) {
-    // 1. Hapus class 'active' dari semua halaman dan tombol nav
+    // 1. Hapus class 'active' dari semua halaman & tombol nav
     Object.values(pages).forEach(page => page.classList.remove('active'));
     navItems.forEach(item => item.classList.remove('active'));
 
     // 2. Tambahkan class 'active' ke halaman yang dipilih
     pages[pageName].classList.add('active');
 
-    // 3. Tambahkan class 'active' ke tombol nav yang sesuai (cari berdasarkan onclick attribute)
+    // 3. Update tombol nav
     const activeNavBtn = Array.from(navItems).find(item => item.getAttribute('onclick').includes(pageName));
     if(activeNavBtn) activeNavBtn.classList.add('active');
 
-    // --- LOGIKA KHUSUS PER HALAMAN ---
+    // --- LOGIC NAVBAR REELS MODE (BARU) ---
+    const navbar = document.querySelector('.bottom-navbar');
     
-    // Jika pindah KE Reels
     if (pageName === 'reels') {
-        
+        // Jika masuk Reels -> Pakai baju gelap
+        navbar.classList.add('reels-mode');
+    } else {
+        // Jika keluar Reels -> Lepas baju gelap (kembali ke putih/default)
+        navbar.classList.remove('reels-mode');
+    }
+    // -------------------------------------
+
+
+    // --- LOGIKA KHUSUS PER HALAMAN (YANG LAMA) ---
+    if (pageName === 'reels') {
+        // ... (kode resetGardenUI dll biarkan tetap ada) ...
         if (typeof resetGardenUI === "function") {
             resetGardenUI(); 
         } else {
-            // Backup manual jika fungsi resetGardenUI tidak terbaca
             if (typeof clearGarden === "function") clearGarden();
             isGardenActive = false;
             const btnTaman = document.getElementById('btn-taman');
@@ -234,27 +284,18 @@ function switchPage(pageName) {
             }
         }
 
-        // Pause musik background utama
         const bgMusic = document.getElementById('musik');
-        if(!bgMusic.paused) {
-             toggleMusik(); 
-        }
+        if(!bgMusic.paused) toggleMusik();
         
-        // Mulai putar video pertama (opsional)
         if (typeof playFirstReel === "function") playFirstReel();
     } 
-    
-    // Jika pindah KE Album atau Home
     else {
-        // ... kode sisanya sama ...
+        // Jika pindah KE Album atau Home
         if (typeof pauseAllReels === "function") pauseAllReels();
         const bgMusic = document.getElementById('musik');
-         if(bgMusic.paused) {
-             toggleMusik();
-        }
+         if(bgMusic.paused) toggleMusik();
     }
 
-    // Jika pindah KE Home, pastikan scroll reveal dicek ulang
     if (pageName === 'home') {
         window.dispatchEvent(new Event('scroll'));
     }
