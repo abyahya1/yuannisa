@@ -695,3 +695,58 @@ body.dark-mode .strip-footer {
 .bottom-navbar.reels-mode .nav-item.active {
     color: var(--accent-gold) !important;
 }
+
+/* --- EDIT BUTTON STYLES (GLASS EFFECT) --- */
+.edit-media-btn {
+    position: absolute;
+    
+    /* Efek Glassmorphism */
+    background: rgba(255, 255, 255, 0.2); /* Sangat transparan */
+    backdrop-filter: blur(8px);           /* Blur latar belakang */
+    -webkit-backdrop-filter: blur(8px);   /* Support Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Garis tepi tipis */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
+    border-radius: 50%;
+    width: 40px;          /* Sedikit lebih besar agar elegan */
+    height: 40px;
+    cursor: pointer;
+    z-index: 50;
+    
+    /* Pengaturan Ikon */
+    font-size: 1.1rem;
+    color: #fff;          /* Ikon warna putih */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Bayangan teks agar terbaca di background terang */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.edit-media-btn:hover {
+    background: rgba(255, 255, 255, 0.4); /* Lebih terang saat di-hover */
+    transform: scale(1.1) rotate(15deg);  /* Efek animasi kecil */
+}
+
+/* Wrapper helper untuk Album */
+.img-wrapper {
+    position: relative;
+    display: block;
+    overflow: hidden; /* Pastikan tombol tetap di dalam area lengkung jika ada border-radius */
+    border-radius: inherit; /* Ikuti bentuk foto */
+}
+
+/* --- TOMBOL MUSIK DI MODE MALAM (GLASS EFFECT) --- */
+body.dark-mode .music-control {
+    background: rgba(255, 255, 255, 0.1); /* Latar transparan */
+    backdrop-filter: blur(10px);          /* Efek blur lebih kuat */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Garis tepi tipis */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);  /* Bayangan glow */
+}
+
+/* Ubah warna batang equalizer menjadi Emas saat mode malam agar kontras */
+body.dark-mode .music-control .bar {
+    background: var(--accent-gold); 
+}

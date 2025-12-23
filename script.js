@@ -419,3 +419,106 @@ document.addEventListener('visibilitychange', function() {
         });
     }
 });
+
+/* --- FITUR GANTI MEDIA (GLASS UI - POSISI KIRI ATAS) --- */
+
+// 1. Buat Input File Tersembunyi
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.style.display = 'none';
+document.body.appendChild(fileInput);
+
+let currentMediaElement = null;
+
+fileInput.addEventListener('change', function(e) {
+    if (this.files && this.files[0]) {
+        const file = this.files[0];
+        const fileURL = URL.createObjectURL(file);
+        
+        if (currentMediaElement) {
+            if (currentMediaElement.tagName === 'VIDEO') {
+                currentMediaElement.src = fileURL;
+                currentMediaElement.load();
+                currentMediaElement.play();
+                currentMediaElement.muted = false; 
+            } else if (currentMediaElement.tagName === 'IMG') {
+                currentMediaElement.src = fileURL;
+            }
+        }
+    }
+    this.value = '';
+});
+
+function triggerEdit(element, type) {
+    currentMediaElement = element;
+    fileInput.accept = type === 'video' ? 'video/*' : 'image/*';
+    fileInput.click();
+}
+
+// 2. Pasang Tombol di REELS (Kiri Atas)
+function initReelsEdit() {
+    const reels = document.querySelectorAll('.reel-item');
+    reels.forEach(reel => {
+        const video = reel.querySelector('video');
+        
+        const btn = document.createElement('button');
+        btn.className = 'edit-media-btn';
+        btn.innerHTML = '✏️';
+        btn.title = "Ganti Video";
+        
+        // POSISI: KIRI ATAS
+        btn.style.top = '25px';
+        btn.style.left = '25px'; // Ganti dari right ke left
+        
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            triggerEdit(video, 'video');
+        };
+        
+        reel.appendChild(btn);
+    });
+}
+
+// 3. Pasang Tombol di ALBUM (Kiri Atas)
+function initAlbumEdit() {
+    const images = document.querySelectorAll('.strip-content img');
+    
+    images.forEach(img => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'img-wrapper';
+        
+        // Copy border-radius dari gambar asli agar rapi
+        const style = window.getComputedStyle(img);
+        wrapper.style.borderRadius = style.borderRadius;
+
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
+        
+        const btn = document.createElement('button');
+        btn.className = 'edit-media-btn';
+        btn.innerHTML = '✏️';
+        
+        // Ukuran lebih kecil untuk album
+        btn.style.width = '30px';
+        btn.style.height = '30px';
+        btn.style.fontSize = '0.8rem';
+        
+        // POSISI: KIRI ATAS
+        btn.style.position = 'absolute';
+        btn.style.top = '10px';
+        btn.style.left = '10px'; // Ganti dari right ke left
+        
+        btn.onclick = (e) => {
+            triggerEdit(img, 'image');
+        };
+        
+        wrapper.appendChild(btn);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        initReelsEdit();
+        initAlbumEdit();
+    }, 1000);
+});
